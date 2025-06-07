@@ -3,45 +3,44 @@ package com.example.floplusnew
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import com.example.floplusnew.data.CycleStartDateManager
+import com.example.floplusnew.ui.screens.AuthScreen
+import com.example.floplusnew.ui.screens.CycleScreen
 import com.example.floplusnew.ui.theme.FloPlusNewTheme
+import com.example.floplusnew.viewmodel.AuthViewModel
+import com.example.floplusnew.viewmodel.CycleViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             FloPlusNewTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                val context = LocalContext.current
+                val authViewModel = remember { AuthViewModel() }
+                var isAuthenticated by remember { mutableStateOf(authViewModel.isLoggedIn.value) }
+
+                LaunchedEffect(authViewModel.isLoggedIn) {
+                    authViewModel.isLoggedIn.collect { isLoggedIn ->
+                        isAuthenticated = isLoggedIn
+                    }
+                }
+
+                if (isAuthenticated) {
+                    val cycleManager = remember { CycleStartDateManager(context.applicationContext) }
+                    val viewModel = remember { CycleViewModel(cycleManager) }
+                    CycleScreen(viewModel = viewModel)
+                } else {
+                    AuthScreen(
+                        viewModel = authViewModel,
+                        onAuthSuccess = {
+                            isAuthenticated = true
+                        }
                     )
                 }
             }
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FloPlusNewTheme {
-        Greeting("Android")
     }
 }

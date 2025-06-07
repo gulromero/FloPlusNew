@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "476401475610",
+    "project_id": "floplusnew",
+    "storage_bucket": "floplusnew.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476401475610:android:6223ff344847c7dfec31a3",
+        "android_client_info": {
+          "package_name": "com.example.floplusnew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSUDLLWwQsZyp9kYk_e3S8OtlTyhpZelY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
