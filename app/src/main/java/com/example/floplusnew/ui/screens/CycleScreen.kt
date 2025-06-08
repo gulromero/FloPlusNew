@@ -10,11 +10,16 @@ import androidx.compose.ui.unit.dp
 import com.example.floplusnew.data.VitaminLogManager
 import com.example.floplusnew.viewmodel.CycleViewModel
 import com.example.floplusnew.model.getTipsForPhase
+import com.example.floplusnew.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
-fun CycleScreen(viewModel: CycleViewModel) {
+fun CycleScreen(
+    viewModel: CycleViewModel,
+    authViewModel: AuthViewModel,
+    onLogout: () -> Unit
+) {
     val context = LocalContext.current
     val vitaminLogManager = remember { VitaminLogManager(context.applicationContext) }
     val loggedToday by vitaminLogManager.vitaminLogFlow.collectAsState(initial = false)
@@ -98,6 +103,15 @@ fun CycleScreen(viewModel: CycleViewModel) {
                 Text("You've already logged today's vitamins!", style = MaterialTheme.typography.bodyMedium)
             }
         }
+
+
+        Button(onClick = {
+            authViewModel.logout()
+            onLogout()
+        }) {
+            Text("LOGOUT")
+        }
+
     }
 
 }

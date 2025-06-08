@@ -68,4 +68,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+
+
+
+
 }
