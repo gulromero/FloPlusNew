@@ -26,7 +26,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    val loginError by viewModel.loginError.collectAsState()
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
 
     if (isLoggedIn) {
@@ -75,6 +75,15 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
+
+            if (!loginError.isNullOrEmpty()) {
+                Text(
+                    text = loginError ?: "",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
 
             Button(
                 onClick = { viewModel.login(email, password) },

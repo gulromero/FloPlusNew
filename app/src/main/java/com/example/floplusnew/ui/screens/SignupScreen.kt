@@ -29,6 +29,8 @@ fun SignupScreen(
     var password by remember { mutableStateOf("") }
 
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+    val loginError by viewModel.loginError.collectAsState()
+
 
     if (isLoggedIn) {
         onSignupSuccess()
@@ -76,6 +78,15 @@ fun SignupScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
+
+            if (!loginError.isNullOrEmpty()) {
+                Text(
+                    text = loginError ?: "",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
 
             Button(
                 onClick = { viewModel.signup(email, password) },

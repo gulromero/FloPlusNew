@@ -76,6 +76,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.2")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
 
 
 
