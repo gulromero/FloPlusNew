@@ -25,6 +25,7 @@ import java.time.LocalDate
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.text.style.TextAlign
 
 
 @Composable
@@ -110,7 +111,7 @@ fun CycleScreen(
                         .height(50.dp)
                 ) {
                     Text(
-                        "Set Cycle Start Date",
+                        "Log Period",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -132,7 +133,7 @@ fun CycleScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "Vitamins: ${it.vitamins.joinToString(", ")}",
+                                text = "Vitamins to focus on today: ${it.vitamins.joinToString(", ")}",
                                 color = Color.White,
                                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp)
                             )
@@ -144,16 +145,23 @@ fun CycleScreen(
                         }
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        val scriptFont = FontFamily(Font(R.font.countryside_script))
+                        val scriptFont = FontFamily(Font(R.font.mouldycheese_font))
 
-                        Text(
-                            text = it.motivation,
-                            color = Color.White,
-                            fontSize = 30.sp,
-                            fontFamily = scriptFont,
-                            lineHeight = 28.sp,
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = it.motivation,
+                                color = Color.White,
+                                fontSize = 30.sp,
+                                fontFamily = scriptFont,
+                                lineHeight = 32.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
 
                     }
                 }
