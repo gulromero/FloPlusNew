@@ -40,6 +40,12 @@ class CycleViewModel(
             else -> null
         }
     }
+
+    fun clearCycleStartDate() {
+        viewModelScope.launch {
+            cycleStartDateManager.clearCycleStartDate()
+        }
+    }
 }
 
 enum class CyclePhase {

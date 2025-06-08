@@ -28,4 +28,11 @@ class CycleStartDateManager(private val context: Context) {
         .map { prefs ->
             prefs[CYCLE_START_DATE]?.let { LocalDate.parse(it) }
         }
+
+    suspend fun clearCycleStartDate() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(CYCLE_START_DATE)
+        }
+    }
+
 }

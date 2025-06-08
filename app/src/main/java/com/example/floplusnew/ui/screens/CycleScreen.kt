@@ -116,6 +116,21 @@ fun CycleScreen(
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+
+                Spacer(modifier = Modifier.height(21.dp))
+                Button(
+                    onClick = { viewModel.clearCycleStartDate() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color(0xFFD64896)
+                    ),
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier
+                        .width(220.dp)
+                        .height(50.dp)
+                ) {
+                    Text("Clear", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                }
             }
 
             // Phase Section
