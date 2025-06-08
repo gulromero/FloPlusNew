@@ -1,19 +1,22 @@
 package com.example.floplusnew.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.floplusnew.viewmodel.AuthViewModel
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import com.example.floplusnew.R
-
+import com.example.floplusnew.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
@@ -31,11 +34,7 @@ fun LoginScreen(
         return
     }
 
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.login_bg),
             contentDescription = "Login Background",
@@ -46,41 +45,61 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Login", style = MaterialTheme.typography.headlineMedium)
-            Text("New to FloPlus+?", style = MaterialTheme.typography.bodySmall)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Please enter Email") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Email", color = Color.White) },
+                textStyle = TextStyle(color = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Please enter Password") },
+                label = { Text("Password", color = Color.White) },
+                placeholder = { Text("*****", color = Color.White) },
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                textStyle = TextStyle(color = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
                 onClick = { viewModel.login(email, password) },
-                modifier = Modifier.fillMaxWidth()
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFFD64896)
+                ),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .width(220.dp)
+                    .height(50.dp)
             ) {
-                Text("LOGIN")
+                Text(
+                    text = "LOGIN",
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             TextButton(onClick = onSignupClick) {
-                Text("Create new Account")
+                Text("New to FloPlus+?", color = Color.White)
             }
         }
     }

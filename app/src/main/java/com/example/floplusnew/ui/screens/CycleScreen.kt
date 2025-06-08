@@ -1,18 +1,31 @@
 package com.example.floplusnew.ui.screens
 
 import android.app.DatePickerDialog
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.floplusnew.R
 import com.example.floplusnew.data.VitaminLogManager
-import com.example.floplusnew.viewmodel.CycleViewModel
 import com.example.floplusnew.model.getTipsForPhase
 import com.example.floplusnew.viewmodel.AuthViewModel
+import com.example.floplusnew.viewmodel.CycleViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.fontResource
+
 
 @Composable
 fun CycleScreen(
@@ -32,9 +45,8 @@ fun CycleScreen(
     }
 
     val selectedDate by viewModel.cycleStartDate.collectAsState()
-    val currentPhase = remember(selectedDate) {
-        viewModel.getCurrentPhase()
-    }
+    val currentPhase = viewModel.getCurrentPhase()
+
     val tips = currentPhase?.let { getTipsForPhase(it) }
 
     if (showLog) {
@@ -42,76 +54,176 @@ fun CycleScreen(
         return
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = selectedDate?.let { "Cycle start: $it" } ?: "No cycle date set.",
-            style = MaterialTheme.typography.headlineSmall
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.cycle_bg),
+            contentDescription = "Cycle Background",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
 
-        Text("Streak: $streak day${if (streak == 1) "" else "s"} in a row!")
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Button(onClick = {
-            val today = LocalDate.now()
-            val picker = DatePickerDialog(
-                context,
-                { _, year, month, dayOfMonth ->
-                    val picked = LocalDate.of(year, month + 1, dayOfMonth)
-                    viewModel.saveCycleStartDate(picked)
-                },
-                today.year,
-                today.monthValue - 1,
-                today.dayOfMonth
-            )
-            picker.show()
-        }) {
-            Text("Set Cycle Start Date")
-        }
+            // Top Info
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = selectedDate?.let { "Cycle start: $it" } ?: "No cycle date set.",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
 
-        currentPhase?.let {
-            Text("Current Phase: $it", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    "Streak: $streak day${if (streak == 1) "" else "s"} in a row!",
+                    color = Color.White
+                )
 
-            tips?.let {
-                Text("Vitamins: ${it.vitamins.joinToString(", ")}")
-                Text("Snacks: ${it.snacks.joinToString(", ")}")
-                Text("Motivation: ${it.motivation}")
-            }
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = { showLog = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("View My Vitamin Log")
-            }
-
-            if (!loggedToday) {
                 Button(
                     onClick = {
-                        scope.launch {
-                            vitaminLogManager.logToday()
-                        }
+                        val today = LocalDate.now()
+                        DatePickerDialog(
+                            context,
+                            { _, year, month, dayOfMonth ->
+                                val picked = LocalDate.of(year, month + 1, dayOfMonth)
+                                viewModel.saveCycleStartDate(picked)
+                            },
+                            today.year, today.monthValue - 1, today.dayOfMonth
+                        ).show()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color(0xFFD64896)
+                    ),
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier
+                        .width(220.dp)
+                        .height(50.dp)
                 ) {
-                    Text("I took my vitamins today")
+                    Text(
+                        "Set Cycle Start Date",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
-            } else {
-                Text("You've already logged today's vitamins!", style = MaterialTheme.typography.bodyMedium)
+            }
+
+            // Phase Section
+            currentPhase?.let {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "Current Phase: $it",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+
+                    tips?.let {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "Vitamins: ${it.vitamins.joinToString(", ")}",
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp)
+                            )
+                            Text(
+                                text = "Snacks: ${it.snacks.joinToString(", ")}",
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        val scriptFont = FontFamily(Font(R.font.countryside_script))
+
+                        Text(
+                            text = it.motivation,
+                            color = Color.White,
+                            fontSize = 30.sp,
+                            fontFamily = scriptFont,
+                            lineHeight = 28.sp,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+
+                    }
+                }
+            }
+
+            // Buttons
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                currentPhase?.let {
+                    Button(
+                        onClick = { showLog = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color(0xFFD64896)
+                        ),
+                        shape = MaterialTheme.shapes.large,
+                        modifier = Modifier
+                            .width(220.dp)
+                            .height(50.dp)
+                    ) {
+                        Text("View My Vitamin Log", fontWeight = FontWeight.Medium)
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    if (!loggedToday) {
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    vitaminLogManager.logToday()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White,
+                                contentColor = Color(0xFFD64896)
+                            ),
+                            shape = MaterialTheme.shapes.large,
+                            modifier = Modifier
+                                .width(220.dp)
+                                .height(50.dp)
+                        ) {
+                            Text("I took my vitamins today", fontWeight = FontWeight.Medium)
+                        }
+                    } else {
+                        Text(
+                            "You've already logged today's vitamins!",
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+
+                // Logout Button
+                Button(
+                    onClick = {
+                        authViewModel.logout()
+                        onLogout()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color(0xFFD64896)
+                    ),
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp)
+                ) {
+                    Text("LOGOUT", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                }
             }
         }
-
-
-        Button(onClick = {
-            authViewModel.logout()
-            onLogout()
-        }) {
-            Text("LOGOUT")
-        }
-
     }
-
 }

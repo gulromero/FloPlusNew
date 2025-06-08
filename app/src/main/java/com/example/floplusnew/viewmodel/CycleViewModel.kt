@@ -45,3 +45,4 @@ class CycleViewModel(
 enum class CyclePhase {
     MENSTRUAL, FOLLICULAR, OVULATION, LUTEAL
 }
+

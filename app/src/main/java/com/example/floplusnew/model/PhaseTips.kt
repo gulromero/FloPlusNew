@@ -13,7 +13,7 @@ fun getTipsForPhase(phase: CyclePhase): PhaseTips {
         CyclePhase.MENSTRUAL -> PhaseTips(
             vitamins = listOf("Iron", "Vitamin C", "Magnesium"),
             snacks = listOf("Dark chocolate", "Spinach smoothie", "Orange slices"),
-            motivation = "Take it slow, your body is doing a lot. Rest, babe"
+            motivation = "Take it slow, your body is doing a lot."
         )
         CyclePhase.FOLLICULAR -> PhaseTips(
             vitamins = listOf("Vitamin D", "B12", "Zinc"),
