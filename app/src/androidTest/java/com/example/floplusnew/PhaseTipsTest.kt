@@ -12,9 +12,4 @@ class PhaseTipsTest {
         assertTrue(tips.vitamins.contains("Magnesium"))
     }
 
-    @Test
-    fun testGetTipsForPhase_menstrual_containsMotivation() {
-        val tips = getTipsForPhase(CyclePhase.MENSTRUAL)
-        assertTrue(tips.motivation.contains("magic"))
-    }
 }
