@@ -16,45 +16,60 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FloPlusNewTheme {
-                val navController = rememberNavController()
-                val context = LocalContext.current
-                val authViewModel = remember { AuthViewModel() }
-                val cycleManager = remember { CycleStartDateManager(context.applicationContext) }
-                val cycleViewModel = remember { CycleViewModel(cycleManager) }
+            AppEntryPoint()
+        }
+    }
+}
 
-                val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+@Composable
+fun AppEntryPoint() {
+    FloPlusNewTheme {
+        val navController = rememberNavController()
+        val context = LocalContext.current
+        val authViewModel = remember { AuthViewModel() }
+        val cycleManager = remember { CycleStartDateManager(context.applicationContext) }
+        val cycleViewModel = remember { CycleViewModel(cycleManager) }
 
-                NavHost(
-                    navController = navController,
-                    startDestination = if (isLoggedIn) "cycle" else "login"
-                ) {
-                    composable("login") {
-                        LoginScreen(
-                            onLoginSuccess = { navController.navigate("cycle") { popUpTo("login") { inclusive = true } } },
-                            onSignupClick = { navController.navigate("signup") },
-                            viewModel = authViewModel
-                        )
+        val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+
+        NavHost(
+            navController = navController,
+            startDestination = if (isLoggedIn) "cycle" else "login"
+        ) {
+            composable("login") {
+                LoginScreen(
+                    onLoginSuccess = {
+                        navController.navigate("cycle") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    },
+                    onSignupClick = { navController.navigate("signup") },
+                    viewModel = authViewModel
+                )
+            }
+
+            composable("signup") {
+                SignupScreen(
+                    onSignupSuccess = {
+                        navController.navigate("cycle") {
+                            popUpTo("signup") { inclusive = true }
+                        }
+                    },
+                    onLoginClick = { navController.navigate("login") },
+                    viewModel = authViewModel
+                )
+            }
+
+            composable("cycle") {
+                CycleScreen(
+                    viewModel = cycleViewModel,
+                    authViewModel = authViewModel,
+                    onLogout = {
+                        navController.navigate("login") {
+                            popUpTo("cycle") { inclusive = true }
+                        }
                     }
-                    composable("signup") {
-                        SignupScreen(
-                            onSignupSuccess = { navController.navigate("cycle") { popUpTo("signup") { inclusive = true } } },
-                            onLoginClick = { navController.navigate("login") },
-                            viewModel = authViewModel
-                        )
-                    }
-                    composable("cycle") {
-                        CycleScreen(
-                            viewModel = cycleViewModel,
-                            authViewModel = authViewModel,
-                            onLogout = {
-                                navController.navigate("login") {
-                                    popUpTo("cycle") { inclusive = true }
-                                }
-                            }
-                        )
-                    }
-                }
+                )
             }
         }
     }

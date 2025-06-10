@@ -49,6 +49,10 @@ fun CycleScreen(
     val currentPhase = viewModel.getCurrentPhase()
 
     val tips = currentPhase?.let { getTipsForPhase(it) }
+    var userQuestion by remember { mutableStateOf("") }
+    val cycleBotReply by viewModel.chatbotResponse.collectAsState()
+
+
 
     if (showLog) {
         VitaminLogHistoryScreen(onBack = { showLog = false })
@@ -248,5 +252,61 @@ fun CycleScreen(
                 }
             }
         }
+        Divider()
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomCenter)
+        ) {
+            Text(
+                "💬 Ask CycleBot:",
+                style = MaterialTheme.typography.titleMedium.copy(color = Color.White)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = userQuestion,
+                onValueChange = { userQuestion = it },
+                label = { Text("Ask anything about your cycle...") },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFD64896),
+                    cursorColor = Color(0xFFD64896),
+                    focusedLabelColor = Color(0xFFD64896)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    viewModel.askCycleBot(userQuestion)
+                    userQuestion = "" // Clear input field
+
+                },
+                modifier = Modifier.align(Alignment.End),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFD64896),
+                    contentColor = Color.White
+                ),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Send")
+            }
+
+
+            if (cycleBotReply.isNotBlank()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "CycleBot says:\n$cycleBotReply",
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
+                )
+            }
+        }
+
     }
 }

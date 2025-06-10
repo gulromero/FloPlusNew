@@ -20,10 +20,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    testOptions {
-        animationsDisabled = true
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -71,17 +67,19 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    implementation("androidx.navigation:navigation-compose:2.7.3")
+
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation("androidx.navigation:navigation-compose:2.7.5")
-    implementation("androidx.compose.material3:material3:1.1.2")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
+    // Retrofit & Gson For CycleBot
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+// OkHttp (for auth headers) CycleBot
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
-
-
+    //CycleBot for loggin in LogCat (see API logs)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
 
 }

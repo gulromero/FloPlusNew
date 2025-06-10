@@ -3,9 +3,10 @@ package com.example.floplusnew.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.floplusnew.data.CycleStartDateManager
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import com.example.floplusnew.network.CycleBot
+import com.example.floplusnew.network.ChatRequest
+import com.example.floplusnew.network.Message
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -41,14 +42,15 @@ class CycleViewModel(
         }
     }
 
+
     fun clearCycleStartDate() {
         viewModelScope.launch {
             cycleStartDateManager.clearCycleStartDate()
         }
     }
+
 }
 
 enum class CyclePhase {
     MENSTRUAL, FOLLICULAR, OVULATION, LUTEAL
 }
-
