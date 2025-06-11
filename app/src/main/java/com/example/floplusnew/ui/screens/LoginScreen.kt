@@ -79,7 +79,7 @@ fun LoginScreen(
             if (!loginError.isNullOrEmpty()) {
                 Text(
                     text = loginError ?: "",
-                    color = Color.Red,
+                    color = Color.White,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
