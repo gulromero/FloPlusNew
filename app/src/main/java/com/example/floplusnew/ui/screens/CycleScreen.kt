@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import kotlinx.coroutines.GlobalScope
+import com.example.floplusnew.BuildConfig
+
 
 @Composable
 fun CycleScreen(
@@ -304,7 +306,7 @@ fun CycleScreen(
     }
 }
 private object CycleBotHandler {
-    private val apiKey = "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"
+    private val apiKey = BuildConfig.OPENAI_API_KEY
     private val cycleBot = CycleBot.create(apiKey)
 
     private val _chatbotResponse = MutableStateFlow("")

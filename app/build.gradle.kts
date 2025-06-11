@@ -6,7 +6,21 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+val openaiKey = File(rootDir, "local.properties").reader().useLines { lines ->
+    lines.firstOrNull { it.startsWith("OPENAI_API_KEY") }
+        ?.split("=")
+        ?.getOrNull(1)
+        ?.replace("\"", "")?.trim()
+} ?: throw IllegalArgumentException("OPENAI_API_KEY not found in local.properties")
+
+
+
 android {
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
     namespace = "com.example.floplusnew"
     compileSdk = 35
 
@@ -18,6 +32,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openaiKey\"")
+
     }
 
     buildTypes {
