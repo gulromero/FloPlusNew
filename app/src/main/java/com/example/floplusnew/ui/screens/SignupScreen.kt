@@ -1,6 +1,7 @@
 package com.example.floplusnew.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -38,11 +39,10 @@ fun SignupScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.signup_bg),
-            contentDescription = "Signup Background",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF97E9B))
         )
 
         Column(

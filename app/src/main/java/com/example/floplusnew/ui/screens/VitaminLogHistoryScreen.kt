@@ -1,6 +1,7 @@
 package com.example.floplusnew.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,13 +25,11 @@ fun VitaminLogHistoryScreen(onBack: () -> Unit) {
     val allDates by manager.allLoggedDatesFlow.collectAsState(initial = emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.cycle_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF97E9B))
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

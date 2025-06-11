@@ -2,6 +2,7 @@ package com.example.floplusnew.ui.screens
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -64,13 +65,11 @@ fun CycleScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.cycle_bg),
-            contentDescription = "Cycle Background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF97E9B))
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
