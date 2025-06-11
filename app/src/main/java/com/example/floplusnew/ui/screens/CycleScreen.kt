@@ -11,22 +11,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 import com.example.floplusnew.R
 import com.example.floplusnew.data.VitaminLogManager
 import com.example.floplusnew.model.getTipsForPhase
 import com.example.floplusnew.viewmodel.AuthViewModel
 import com.example.floplusnew.viewmodel.CycleViewModel
+import com.example.floplusnew.network.ChatRequest
+import com.example.floplusnew.network.Message
+import com.example.floplusnew.network.CycleBot
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.res.fontResource
-import androidx.compose.ui.text.style.TextAlign
-
+import kotlinx.coroutines.GlobalScope
 
 @Composable
 fun CycleScreen(
@@ -50,9 +54,7 @@ fun CycleScreen(
 
     val tips = currentPhase?.let { getTipsForPhase(it) }
     var userQuestion by remember { mutableStateOf("") }
-    val cycleBotReply by viewModel.chatbotResponse.collectAsState()
-
-
+    val cycleBotReply by CycleBotHandler.chatbotResponse.collectAsState()
 
     if (showLog) {
         VitaminLogHistoryScreen(onBack = { showLog = false })
@@ -75,7 +77,6 @@ fun CycleScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Top Info
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = selectedDate?.let { "Cycle start: $it" } ?: "No cycle date set.",
@@ -114,11 +115,7 @@ fun CycleScreen(
                         .width(220.dp)
                         .height(50.dp)
                 ) {
-                    Text(
-                        "Log Period",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Text("Log Period", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 }
 
                 Spacer(modifier = Modifier.height(21.dp))
@@ -137,7 +134,6 @@ fun CycleScreen(
                 }
             }
 
-            // Phase Section
             currentPhase?.let {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
@@ -181,12 +177,10 @@ fun CycleScreen(
                                 textAlign = TextAlign.Center
                             )
                         }
-
                     }
                 }
             }
 
-            // Buttons
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 currentPhase?.let {
                     Button(
@@ -233,7 +227,6 @@ fun CycleScreen(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
-                // Logout Button
                 Button(
                     onClick = {
                         authViewModel.logout()
@@ -252,6 +245,7 @@ fun CycleScreen(
                 }
             }
         }
+
         Divider()
 
         Column(
@@ -271,8 +265,7 @@ fun CycleScreen(
                 value = userQuestion,
                 onValueChange = { userQuestion = it },
                 label = { Text("Ask anything about your cycle...") },
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFD64896),
                     cursorColor = Color(0xFFD64896),
@@ -284,9 +277,8 @@ fun CycleScreen(
 
             Button(
                 onClick = {
-                    viewModel.askCycleBot(userQuestion)
-                    userQuestion = "" // Clear input field
-
+                    CycleBotHandler.askCycleBot(userQuestion)
+                    userQuestion = ""
                 },
                 modifier = Modifier.align(Alignment.End),
                 colors = ButtonDefaults.buttonColors(
@@ -298,7 +290,6 @@ fun CycleScreen(
                 Text("Send")
             }
 
-
             if (cycleBotReply.isNotBlank()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -307,6 +298,33 @@ fun CycleScreen(
                 )
             }
         }
-
     }
 }
+private object CycleBotHandler {
+    private val apiKey = "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"
+    private val cycleBot = CycleBot.create(apiKey)
+
+    private val _chatbotResponse = MutableStateFlow("")
+    val chatbotResponse: StateFlow<String> = _chatbotResponse
+
+    fun askCycleBot(question: String) {
+        GlobalScope.launch {
+            try {
+                val response = cycleBot.sendMessage(
+                    ChatRequest(
+                        messages = listOf(
+                            Message("system", "You are CycleBot, a sweet and supportive friend who answers all menstruation-related questions with love, facts, and emojis."),
+                            Message("user", question)
+                        )
+                    )
+                )
+                _chatbotResponse.value = response.choices.firstOrNull()?.message?.content
+                    ?: "CycleBot's not available right now.."
+            } catch (e: Exception) {
+                _chatbotResponse.value = "Something went wrong: ${e.localizedMessage}"
+            }
+        }
+    }
+}
+
+
