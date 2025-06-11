@@ -132,6 +132,25 @@ fun CycleScreen(
                 ) {
                     Text("Clear", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 }
+
+                Spacer(modifier = Modifier.height(21.dp))
+
+                Button(
+                    onClick = {
+                        authViewModel.logout()
+                        onLogout()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color(0xFFD64896)
+                    ),
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp)
+                ) {
+                    Text("LOGOUT", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                }
             }
 
             currentPhase?.let {
@@ -227,22 +246,6 @@ fun CycleScreen(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
-                Button(
-                    onClick = {
-                        authViewModel.logout()
-                        onLogout()
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = Color(0xFFD64896)
-                    ),
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier
-                        .width(150.dp)
-                        .height(40.dp)
-                ) {
-                    Text("LOGOUT", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                }
             }
         }
 
