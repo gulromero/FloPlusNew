@@ -152,6 +152,25 @@ fun CycleScreen(
                 ) {
                     Text("LOGOUT", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                currentPhase?.let {
+                    Button(
+                        onClick = { showLog = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color(0xFFD64896)
+                        ),
+                        shape = MaterialTheme.shapes.large,
+                        modifier = Modifier
+                            .width(220.dp)
+                            .height(50.dp)
+                    ) {
+                        Text("View My Vitamin Log", fontWeight = FontWeight.Medium)
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
             }
 
             currentPhase?.let {
@@ -191,7 +210,7 @@ fun CycleScreen(
                             Text(
                                 text = it.motivation,
                                 color = Color.White,
-                                fontSize = 30.sp,
+                                fontSize = 20.sp,
                                 fontFamily = scriptFont,
                                 lineHeight = 32.sp,
                                 textAlign = TextAlign.Center
@@ -202,22 +221,6 @@ fun CycleScreen(
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                currentPhase?.let {
-                    Button(
-                        onClick = { showLog = true },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                            contentColor = Color(0xFFD64896)
-                        ),
-                        shape = MaterialTheme.shapes.large,
-                        modifier = Modifier
-                            .width(220.dp)
-                            .height(50.dp)
-                    ) {
-                        Text("View My Vitamin Log", fontWeight = FontWeight.Medium)
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
 
                     if (!loggedToday) {
                         Button(
@@ -279,21 +282,37 @@ fun CycleScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
-                onClick = {
-                    CycleBotHandler.askCycleBot(userQuestion)
-                    userQuestion = ""
-                },
-                modifier = Modifier.align(Alignment.End),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFD64896),
-                    contentColor = Color.White
-                ),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text("Send")
-            }
 
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    onClick = { CycleBotHandler.clearResponse() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray,
+                        contentColor = Color.DarkGray
+                    ),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text("Clear")
+                }
+
+                Button(
+                    onClick = {
+                        CycleBotHandler.askCycleBot(userQuestion)
+                        userQuestion = ""
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFD64896),
+                        contentColor = Color.White
+                    ),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text("Send")
+                }
+            }
             if (cycleBotReply.isNotBlank()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -301,6 +320,7 @@ fun CycleScreen(
                     style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
                 )
             }
+
         }
     }
 }
@@ -329,6 +349,11 @@ private object CycleBotHandler {
             }
         }
     }
+
+    fun clearResponse() {
+        _chatbotResponse.value = ""
+    }
+
 }
 
 
